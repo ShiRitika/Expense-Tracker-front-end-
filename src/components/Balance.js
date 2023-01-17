@@ -15,8 +15,6 @@ const useStyles = makeStyles({});
 const Balance = ({ transactions }) => {
     const classes = useStyles();
 
-    console.log(transactions);
-
     const amount = transactions && transactions.map(transaction => (transaction.amount));
     const total = amount && amount.reduce((amount, item) => (amount += item), 0).toFixed(2);//to make it in 2 decimal point
     const finalTotal = total > 0 ? total : 0;
@@ -26,7 +24,6 @@ const Balance = ({ transactions }) => {
             <BalanceText>Balance:<span> ₹{finalTotal}</span></BalanceText>
         </Box>
     );
-
 };
 Balance.propTypes = {
     transactions: PropTypes.array.isRequired

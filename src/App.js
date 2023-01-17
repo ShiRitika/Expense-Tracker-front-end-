@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Balance from "./components/Balance";
 import ExpenseCard from "./components/ExpenseCard";
 import TransactionHistory from "./components/TransitionHistory";
-import History from "./components/History";
+import SearchTransactionHistory from "./components/SearchTransactionHistory";
 
 import { useEffect, useState } from "react";
 import { apiSlice } from "./store/apiSlice";
@@ -22,20 +22,18 @@ const MainComponentContainer = styled(Box)`
     border-Radius: 20px;
     background-Color: #fff;
     & > div {
-        Height: 140vh;
         width: 50%;
     }
 `;
 const useStyles = makeStyles({
     hearderContainer: {
         margin: "auto" ,
-        border: "1px solid black",
         textAlign: "center",
         boxShadow: "0 1px 2px 0 rgb(0 0 0 / 0.05)",   
     },
 });
 
-function App() {
+const App = () => {
     const classes = useStyles();
 
     let { data: incomeData } = apiSlice.useGetIncomeTransactionQuery();
@@ -67,15 +65,6 @@ function App() {
     },[incomeData,expenseData]);
     
     const [transactions, setTransaction] = useState(transactionGetFromFunc);
-    // const [transactions, setTransaction] = useState([
-    //     { id: 1, text: "momos", amount: 50, date: 15032022 },
-    //     { id: 2, text: "cake", amount: -100, date: 16032022 },
-    //     { id: 3, text: "book", amount: 200, date: 17032022 },
-    //     { id: 4, text: "light", amount: -300, date: 18032022 },
-    //     { id: 5, text: "pocket money", amount: 1000, date: 20032022 },
-    // ]
-    // );
-    // console.log("dummydata:",transactions);
     
     return (
         <div className="App">
@@ -88,12 +77,12 @@ function App() {
                         <TransactionHistory transactions={transactions} setTransaction={setTransaction}/>
                     </Box>
                     <Box>
-                        <History />
+                        <SearchTransactionHistory transactions={transactions}/>
                     </Box>
                 </MainComponentContainer>
             </div>
         </div>
     );
-}
+};
 
 export default App;

@@ -1,6 +1,9 @@
 import { ListItem, ListItemText, styled, ListItemIcon, Divider } from "@mui/material";
 import { PropTypes } from "prop-types";
 import DeleteIcon from "@material-ui/icons/Delete";
+import moment from "moment";
+
+import { apiSlice } from "../store/apiSlice";
 
 const Details = styled(ListItem)`
     margin-top: 10px,
@@ -8,10 +11,18 @@ const Details = styled(ListItem)`
 
 const ParticularTransaction = ({ transaction , setTransaction, transactions  }) => {
     const color = transaction.amount > 0 ? "Green" : "Red";
-    // console.log(transaction);
-    // console.log(transactions);
+
+    let dateObj = new Date(transaction.date);
+    let momentObj = moment(dateObj);
+    let finalDate = momentObj.format("DD-MM-YYYY");
+
+    const [ deleteIncomeTransaction ] = apiSlice.useDeleteIncomeTransactionMutation();
+    const [ deleteExpenseTransaction ] = apiSlice.useDeleteExpenseTransactionMutation(); 
     const deleteTransaction = (id) => {
-        setTransaction(transactions.filter(transaction => transaction.id !== id));
+        if(!id) return 0;
+        deleteExpenseTransaction({_id:id});
+        deleteIncomeTransaction({_id:id});
+        setTransaction(transactions.filter(transaction => transaction._id !== id));
     };
 
     return (
@@ -23,14 +34,13 @@ const ParticularTransaction = ({ transaction , setTransaction, transactions  }) 
                 {transaction.amount}
             </ListItemText>
             <ListItemText>
-                {transaction.date}
+                {finalDate}
             </ListItemText>
             <ListItemIcon>
-                <DeleteIcon onClick={() => deleteTransaction(transaction.id)} />
+                <DeleteIcon onClick={() => deleteTransaction(transaction._id??"")} />
             </ListItemIcon>
         </Details><Divider /></>
     );
-
 };
 ParticularTransaction.propTypes = {
     transaction: PropTypes.string.isRequired

@@ -5,42 +5,50 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { PropTypes } from "prop-types";
-import moment from "moment"; 
+
+import { apiSlice } from "../store/apiSlice";
 
 const Container = styled(Box)`
 display: flex;
 flex-direction: column;
-& > h5 , & > div, & > button{
-    margin-top: 30px
+& > h5 , & > div, & > div{
+    margin-top: 10px
 }
 `;
 
-const NewExpenseForm = ({ setTransaction }) => {
+const AddButton = styled(Button)`
+background-color: #2c4762;
+margin-top: 30px;
+&:hover{
+    background-color: #021528;
+}
+`;
+
+const NewExpenseForm = ({ setTransaction, setOpenExpense }) => {
     const [text, setText] = useState("");
     const [amount, setAmount] = useState(0);
+    const [value, setValue] = useState(dayjs("01/01/2023"));
 
-    const addTransaction = () => {
-        const expenseTransaction = {
-            id: Math.floor(Math.random()* 1000000),
-            text: text,
-            amount: -(+amount),
-            date: new Date(value)
-        };
-        const dateStringForm = moment(expenseTransaction.date.toISOString()).utc().format("YYYY-MM-DD");
-        const finalExpenseTransaction = {
-            id: Math.floor(Math.random()* 1000000),
-            text: text,
-            amount: -(+amount),
-            date: dateStringForm
-        };
-        setTransaction(prevState => [finalExpenseTransaction , ...prevState]);
+    const [ addExpenseTransaction ] = apiSlice.useAddExpenseTransactionMutation();
 
-    };
-
-    const [value, setValue] = useState(dayjs("2023-01-09T21:11:54"));
-    
     const handleChange = (newValue) => {
         setValue(newValue);
+    };
+
+    const addTransaction = async() => {
+        const finalExpenseTransaction = {
+            text: text,
+            amount: -(+amount),
+            date: new Date(value).toLocaleDateString()
+        };
+        if(!finalExpenseTransaction) return {};
+        await addExpenseTransaction(finalExpenseTransaction).unwrap();
+        setTransaction(prevState => [finalExpenseTransaction , ...prevState]);
+    };
+
+    const handleClick = () => {
+        addTransaction();
+        setOpenExpense(false);
     };
 
     return(
@@ -49,14 +57,17 @@ const NewExpenseForm = ({ setTransaction }) => {
             <TextField label="Enter Expense Title" type="text" onChange={(e) => setText(e.target.value)}></TextField>
             <TextField  label="Enter Amount"type="number" onChange={(e) => setAmount(e.target.value)}></TextField>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker label="Date desktop" inputFormat="MM/DD/YYYY" value={value} onChange={handleChange} renderInput={(params) => <TextField {...params} />}/>
+                <DesktopDatePicker views={["day"]} minDate={dayjs("01/01/2023")} maxDate={dayjs("01/31/2023")} label="Date" inputFormat="DD/MM/YYYY" value={value} onChange={handleChange} renderInput={(params) => <TextField {...params} />}/>
             </LocalizationProvider>
-            <Button variant="contained" onClick={() => addTransaction()}>Add Transaction</Button>
+            <AddButton variant="contained" onClick={handleClick}>Add Transaction</AddButton>
         </Container>
     );
 };
 NewExpenseForm.propTypes = {
     setTransaction: PropTypes.func.isRequired
+};
+NewExpenseForm.propTypes = {
+    setOpenExpense: PropTypes.func.isRequired
 };
 
 export default NewExpenseForm;

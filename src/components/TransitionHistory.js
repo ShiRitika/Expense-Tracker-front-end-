@@ -1,12 +1,13 @@
 import { Typography, Divider, Box, List, styled } from "@mui/material";
 import { PropTypes } from "prop-types";
 import ParticularTransaction from "./ParticularTransaction";
+import { useEffect, useState } from "react";
 
 const MainContainer = styled(Box)`
-    border: 1px spolid blue;
+margin: 2rem 0 0 0;
     & > h5 {
         font-weight: 600;
-        font-size: 25px;
+        font-size: 27px;
         margin-top: 10px;
     }
     & > hr {
@@ -34,15 +35,34 @@ const MainContainer = styled(Box)`
 `;
 
 const TransactionHistory = ({ transactions, setTransaction }) => {
-    // console.log(transactions[0]);
+    transactions.reverse();
+    const getFiveData = () => {
+        if(transactions[0] !== undefined){
+            let fiveTransaction = [];
+            for(let i = 0; i < 5 ; i++) {
+                fiveTransaction.push(transactions[i]);
+            }
+            setFiveTransaction(fiveTransaction);
+        }
+    };
+    
+    let  fiveTransactionGetFromFunc = [];
+    useEffect(() => {
+        if(transactions){
+            fiveTransactionGetFromFunc = getFiveData(transactions); 
+        }
+    },[transactions]);
+    
+    const [fiveTransactionData, setFiveTransaction] = useState(fiveTransactionGetFromFunc);
+
     return (
         <MainContainer>
             <Typography variant="h5">Transaction History</Typography>
             <Divider />
             <List>
                 {
-                    transactions.map(transaction => (
-                        <ParticularTransaction transaction={transaction} key={transaction.id} setTransaction={setTransaction} transactions={transactions} />
+                    fiveTransactionData.map(transaction => (
+                        <ParticularTransaction transaction={transaction} key={transaction._id} setTransaction={setTransaction}  transactions={transactions} />
                     ))
                 }
             </List>

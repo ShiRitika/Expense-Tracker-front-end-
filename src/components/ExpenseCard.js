@@ -5,6 +5,7 @@ import Modal from "@mui/material/Modal";
 import NewIncomeForm from "./NewIncomeForm";
 import NewExpenseForm from "./NewExpenseForm";
 import CloseIcon from "@material-ui/icons/Close";
+import { makeStyles } from "@material-ui/core/styles";
 
 const style = {
     position: "absolute",
@@ -50,7 +51,40 @@ const Container = styled(Box)`
     };
 `;
 
+const useStyles = makeStyles({
+    modalContainer: {
+        "& div": {
+            "& div": {
+                "& div": {
+                    "& .css-1sumxir-MuiFormLabel-root-MuiInputLabel-root.Mui-focused": {
+                        color: "#2c4762",
+                        borderColor: "#2c4762"
+                    },
+                    "& .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#2c4762"
+                    },
+                    "& .css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#2c4762"
+                    },
+                    "& div": {
+                        fontWeight: 600,
+                        fontSize: "1rem",
+                        color: "grey",
+                        "& div": {
+                            "& button": {
+                                color: "#2c4762",
+                                padding: "20px 35px"
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+});
+
 const ExpenseCard = ({ transactions, setTransaction }) => {
+    const classes = useStyles();
     const amount = transactions.map((transaction) => transaction.amount);
     const income = amount.filter((item) => item > 0);
     const totalIncome = income.reduce((amount, item) => (amount += item), 0).toFixed(2);
@@ -72,12 +106,12 @@ const ExpenseCard = ({ transactions, setTransaction }) => {
                     <Typography style={{ fontWeight: "bold", color: "#6e6060" }}>Income</Typography>
                     <Typography style={{ color: "green", fontWeight: "bold", fontSize: "20px" }}>₹ {totalIncome}</Typography>
                     <Button variant="contained" onClick={handleOpenIncomeModal}>Add Income</Button>
-                    <Modal open={openIncome} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+                    <Modal className={classes.modalContainer} open={openIncome} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                         <Box sx={style}>
                             <Box>
                                 <CloseIcon onClick={handleCloseIncomeModal} />
                             </Box>
-                            <NewIncomeForm setTransaction={setTransaction} />
+                            <NewIncomeForm setTransaction={setTransaction} setOpenIncome={setOpenIncome} />
                         </Box>
                     </Modal>
                 </CardContent>
@@ -87,12 +121,12 @@ const ExpenseCard = ({ transactions, setTransaction }) => {
                     <Typography style={{ fontWeight: "bold", color: "#6e6060" }}>Expense</Typography>
                     <Typography style={{ color: "red", fontWeight: "bold", fontSize: "20px" }}>₹ {totalExpense}</Typography>
                     <Button variant="contained" onClick={handleOpenExpenseModal}>Add Expense</Button>
-                    <Modal open={openExpense} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+                    <Modal className={classes.modalContainer} open={openExpense} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
                         <Box sx={style}>
                             <Box>
                                 <CloseIcon onClick={handleCloseExpenseModal} />
                             </Box>
-                            <NewExpenseForm setTransaction={setTransaction} />
+                            <NewExpenseForm setTransaction={setTransaction} setOpenExpense={setOpenExpense} />
                         </Box>
                     </Modal>
                 </CardContent>

@@ -5,41 +5,48 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { PropTypes } from "prop-types";
-import moment from "moment"; 
 
+import { apiSlice } from "../store/apiSlice";
 
 const Container = styled(Box)`
 display: flex;
 flex-direction: column;
-& > h5 , & > div, & > button{
-    margin-top: 30px
+& > h5 , & > div, & > div{
+    margin-top: 10px;
+}
+`;
+const AddButton = styled(Button)`
+background-color: #2c4762;
+margin-top: 30px;
+&:hover{
+    background-color: #021528;
 }
 `;
 
-const NewIncomeForm = ({ setTransaction }) => {
+const NewIncomeForm = ({ setTransaction, setOpenIncome  }) => {
     const [text, setText] = useState("");
     const [amount, setAmount] = useState(0);
-    const [value, setValue] = useState(dayjs("2023-01-09T21:11:54"));
+    const [value, setValue] = useState(dayjs("01/01/2023"));
+
+    const [ addIncomeTransaction ] = apiSlice.useAddIncomeTransactionMutation();
     
     const handleChange = (newValue) => {
         setValue(newValue);
     };
 
-    const addTransaction = () => {
-        const incomeTransaction = {
-            id: Math.floor(Math.random()* 1000000),
+    const addTransaction = async() => {
+        let finalIncomeTransaction = {
             text: text,
             amount: +amount,//add plus to make it number type
-            date: new Date(value)
+            date: new Date(value).toLocaleDateString()
         };
-        const dateStringForm = moment(incomeTransaction.date.toISOString()).utc().format("YYYY-MM-DD");
-        const finalIncomeTransaction = {
-            id: Math.floor(Math.random()* 1000000),
-            text: text,
-            amount: +amount,//add plus to make it number type
-            date: dateStringForm
-        };
+        if(!finalIncomeTransaction) return {};
+        await addIncomeTransaction(finalIncomeTransaction).unwrap();
         setTransaction(prevState => [finalIncomeTransaction, ...prevState]);
+    };
+    const handleClick = () => {
+        addTransaction();
+        setOpenIncome(false);
     };
 
     return(
@@ -48,14 +55,17 @@ const NewIncomeForm = ({ setTransaction }) => {
             <TextField label="Enter Income Title" type="text" onChange={(e) => setText(e.target.value)}></TextField>
             <TextField  label="Enter Amount" type="number" onChange={(e) => setAmount(e.target.value)}></TextField>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DesktopDatePicker label="Date" inputFormat="MM/DD/YYYY" value={value} onChange={handleChange} renderInput={(params) => <TextField {...params} />}/>
+                <DesktopDatePicker views={["day"]} minDate={dayjs("01/01/2023")} maxDate={dayjs("01/31/2023")} label="Date" inputFormat="DD/MM/YYYY" value={value} onChange={handleChange} renderInput={(params) => <TextField {...params} />}/>
             </LocalizationProvider>
-            <Button variant="contained" onClick={() => addTransaction()}>Add Transaction</Button>
+            <AddButton variant="contained" onClick={handleClick}>Add Transaction</AddButton>
         </Container>
     );
 };
 NewIncomeForm.propTypes = {
     setTransaction: PropTypes.func.isRequired
+};
+NewIncomeForm.propTypes = {
+    setOpenIncome: PropTypes.func.isRequired
 };
 
 export default NewIncomeForm;
