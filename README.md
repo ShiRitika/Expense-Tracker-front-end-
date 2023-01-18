@@ -28,7 +28,7 @@ Hooks used- useState, UseEffect, Redux.
 - So first need to run localserver to get API.
 - Run project(Expense-Tracker) available on github. URL for it: https://github.com/ShiRitika/Expense-Tracker
 - open Expense-Tracker project go inside back-end folder and run the command on terminal "npm start".
-![severTerminal](ReadmeImages\severTerminal.png) like this..
+![severTerminal](ReadmeImages/severTerminal.png) like this..
 to run project & get API
 
 ## APIs URL
@@ -67,28 +67,28 @@ You may also see any lint errors in the console.
 ### Home - Page
 
 Home Screen
-![Home-Page](ReadmeImages\HomePage.png)
+![Home-Page](ReadmeImages/HomePage.png)
 
 ## Project Includes:
 - Add Income/Add Expenses Button:- when user click over this button Model screen containing form will render.
 
 ### Add Income Model Box
-![Add Income Model](ReadmeImages\AddIncomeModel.png)
+![Add Income Model](ReadmeImages/AddIncomeModel.png)
 -From Here user can add their Income and Expenses. Both fields are mandatory.
 
 ### Add Income/Expense
-![Income/Expense](ReadmeImages\Income&Expense.png)
+![Income/Expense](ReadmeImages/Income&Expense.png)
 - Income/Expense:- When user add Income in their account that income get added into income. If user add any expenses, then that money gets added in expenses.
 - Balance:- this is the difference between Total Income and Total Expenses 
 -Transaction History: In this section have last 5 transaction. If transaction is credited, then it will be Green with +sign before the amount. If transaction is for expenses, then will be in red with – sign. 
 
 ### Search Transaction History
-![Search Transaction](ReadmeImages\SearchHistory.png)
+![Search Transaction](ReadmeImages/SearchHistory.png)
 - Search Transaction History:- When click on calender feild, you are ble to see only current month dates. 
 
-![Search](ReadmeImages\search.png)
+![Search](ReadmeImages/search.png)
 user can chose any date once date selected inside Transaction Info section  all the expenses and Income Information will render,
-![info](ReadmeImages\info.png)
+![info](ReadmeImages/info.png)
  If no transaction present on particular date it will show "no data is available".
 
-![invalid](ReadmeImages\invalid.png)
+![invalid](ReadmeImages/invalid.png)
